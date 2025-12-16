@@ -1,0 +1,2963 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ============ SEO OPTIMIZATION ============ -->
+    <title>Dashboard Tahfiz Kelas B IKHWAN At-Thuba - Monitoring Hafalan Quran</title>
+    <meta name="description" content="Sistem monitoring progress hafalan Quran untuk kelas tahfiz. Pantau perkembangan siswa, absensi, dan ranking hafalan secara real-time.">
+    <meta name="keywords" content="tahfiz, hafalan quran, dashboard pendidikan, monitoring hafalan, kelas tahfiz, laporan siswa, pendidikan islam">
+    <meta name="author" content="Tahfiz At-Thuba">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dashboard Tahfiz - Monitoring Hafalan Quran">
+    <meta property="og:description" content="Pantau perkembangan hafalan siswa tahfiz secara online">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/4361ee/ffffff?text=Dashboard+Tahfiz">
+    <meta property="og:url" content="https://tahfiz-atthuba.github.io">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dashboard Tahfiz - Monitoring Hafalan Quran">
+    <meta name="twitter:description" content="Pantau perkembangan hafalan siswa tahfiz secara online">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/4361ee/ffffff?text=Dashboard+Tahfiz">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Dashboard Tahfiz Kelas B IKHWAN At-Thuba",
+      "description": "Sistem monitoring progress hafalan Al-Quran untuk kelas tahfiz",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "countriesSupported": "ID",
+      "inLanguage": "id",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "IDR"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Tahfiz At-Thuba",
+        "url": "https://tahfiz-atthuba.github.io"
+      }
+    }
+    </script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ===== VARIABLES & RESET ===== */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --danger: #ef233c;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== SKIP TO CONTENT (A11y) ===== */
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1001;
+        }
+
+        .skip-to-content:focus {
+            top: 10px;
+        }
+
+        /* ===== HEADER & LOGIN ===== */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .login-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav-tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .nav-tab:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(67, 97, 238, 0.05);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            background: linear-gradient(to bottom, rgba(67, 97, 238, 0.1), transparent);
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .tab-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ===== DASHBOARD TAB ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 5px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-content h3 {
+            color: #666;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .stat-desc {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+
+        /* ===== ABSENSI TAB ===== */
+        .absensi-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            color: var(--secondary);
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .semester-info {
+            background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .month-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .month-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .month-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .month-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .absensi-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .absensi-table th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .absensi-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-cell {
+            font-weight: 600;
+            border-radius: 5px;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+        }
+
+        .status-hadir { background: rgba(76, 201, 240, 0.2); color: #4cc9f0; }
+        .status-ijin { background: rgba(247, 37, 133, 0.2); color: #f72585; }
+        .status-sakit { background: rgba(67, 97, 238, 0.2); color: var(--primary); }
+        .status-alpha { background: rgba(239, 35, 60, 0.2); color: #ef233c; }
+
+        /* ===== DATA SISWA TAB ===== */
+        .students-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .student-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .student-name h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .student-number {
+            color: #666;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .student-progress {
+            margin-top: 15px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* ===== KLASEMEN TAB ===== */
+        .ranking-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+            border-radius: 20px;
+        }
+
+        .podium-place {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            min-width: 180px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .podium-place:hover {
+            transform: translateY(-10px);
+        }
+
+        .podium-place.first {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            height: 220px;
+            order: 2;
+            z-index: 3;
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .podium-place.second {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+            height: 190px;
+            order: 1;
+            z-index: 2;
+            box-shadow: 0 15px 40px rgba(192, 192, 192, 0.3);
+        }
+
+        .podium-place.third {
+            background: linear-gradient(135deg, #cd7f32 0%, #e9b076 100%);
+            height: 160px;
+            order: 3;
+            z-index: 1;
+            box-shadow: 0 15px 40px rgba(205, 127, 50, 0.3);
+        }
+
+        .podium-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .podium-student {
+            color: white;
+            font-weight: 600;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .student-rank {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .student-surah {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .ranking-table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .ranking-table thead {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .ranking-table th {
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .ranking-table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .ranking-table tbody tr:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .ranking-table td {
+            padding: 18px 15px;
+            font-size: 0.95rem;
+        }
+
+        .rank-cell {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-gold { background: rgba(255, 215, 0, 0.2); color: #b8860b; }
+        .badge-silver { background: rgba(192, 192, 192, 0.2); color: #808080; }
+        .badge-bronze { background: rgba(205, 127, 50, 0.2); color: #8b4513; }
+
+        /* ===== LAPORAN TAB ===== */
+        .reports-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .report-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .report-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .report-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .report-content h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .report-content p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* ===== LOGIN MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            margin-top: 50px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #f8f9ff;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+            background: #eef1ff;
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.3s ease;
+            max-width: 400px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-success {
+            border-left: 4px solid #4cc9f0;
+        }
+
+        .notification-warning {
+            border-left: 4px solid #f72585;
+        }
+
+        .notification-error {
+            border-left: 4px solid #ef233c;
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef233c, #f72585);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid #4cc9f0;
+            color: #4cc9f0;
+        }
+
+        .alert-warning {
+            background: rgba(247, 37, 133, 0.1);
+            border-left: 4px solid #f72585;
+            color: #f72585;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tab {
+                flex: 1 0 120px;
+                padding: 15px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .podium {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+            
+            .podium-place {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .student-card, .stat-card, .month-card {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .month-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                font-size: 12pt;
+            }
+            
+            .header, .nav-tabs, .login-section, 
+            .modal, .footer, .report-card,
+            .notification, .loading {
+                display: none !important;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+            
+            .absensi-container, .students-container, 
+            .ranking-container, .reports-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+                margin: 10px 0;
+                padding: 20px;
+            }
+            
+            .stat-card, .student-card, .month-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #eee;
+            }
+            
+            a {
+                text-decoration: none;
+                color: black;
+            }
+            
+            .btn {
+                display: none;
+            }
+        }
+
+        /* ===== DARK MODE SUPPORT ===== */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --light: #1a1a1a;
+                --dark: #f8f9fa;
+                --card-bg: #2d2d2d;
+            }
+            
+            body {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+                color: var(--dark);
+            }
+            
+            .stat-card, .absensi-container, .students-container,
+            .ranking-container, .reports-container, .nav-tabs {
+                background: var(--card-bg);
+                border: 1px solid #444;
+            }
+            
+            .semester-info, .student-card, .month-card,
+            .report-card, .stat-box {
+                background: #363636;
+            }
+            
+            .stat-content h3, .stat-desc, .student-number,
+            .report-content p, .footer {
+                color: #bbb;
+            }
+            
+            .progress-bar {
+                background: #444;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SKIP TO CONTENT (Accessibility) -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <!-- LOADING MODAL -->
+    <div class="loading" id="loadingModal">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Sedang memproses...</p>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-user-shield"></i>
+                <h2>Login Dashboard</h2>
+                <p>Masuk sebagai guru atau orang tua</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="userRole"><i class="fas fa-user-tag"></i> Pilih Peran</label>
+                    <select id="userRole" required>
+                        <option value="">-- Pilih Peran --</option>
+                        <option value="guru">Guru</option>
+                        <option value="ortu">Orang Tua</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+            <div style="margin-top: 20px; text-align: center; color: #666; font-size: 0.9rem;">
+                <p><strong>Demo Login:</strong></p>
+                <p>Guru: username: <code>guru</code>, password: <code>guru123</code></p>
+                <p>Orang Tua: username: <code>nama siswa tanpa spasi</code>, password: <code>anak123</code></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header" role="banner">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-quran" aria-hidden="true"></i>
+                    <div class="logo-text">
+                        <h1>Dashboard Tahfiz Kelas B IKHWAN At-Thuba</h1>
+                        <p>Semester 1 - Monitoring Hafalan Quran 2025</p>
+                    </div>
+                </div>
+                <div class="login-section">
+                    <div class="user-info" id="userDisplay">
+                        <i class="fas fa-user"></i>
+                        <span>Silakan login</span>
+                    </div>
+                    <button class="btn btn-primary" onclick="openLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="btn btn-danger" onclick="logout()" style="display: none;" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- NAVIGATION -->
+        <nav class="nav-tabs" role="navigation" aria-label="Main Navigation">
+            <button class="nav-tab active" onclick="switchTab('dashboard')" id="tabDashboard" aria-current="page">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+                <span class="tab-badge">16</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('absensi')" id="tabAbsensi">
+                <i class="fas fa-calendar-check"></i> Absensi
+                <span class="tab-badge">50</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('siswa')" id="tabSiswa">
+                <i class="fas fa-users"></i> Data Siswa
+                <span class="tab-badge">16</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('ranking')" id="tabRanking">
+                <i class="fas fa-trophy"></i> Klasemen
+                <span class="tab-badge">🏆</span>
+            </button>
+            <button class="nav-tab" onclick="switchTab('laporan')" id="tabLaporan">
+                <i class="fas fa-chart-bar"></i> Laporan
+                <span class="tab-badge">📊</span>
+            </button>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main id="main-content" role="main">
+            <!-- DASHBOARD TAB -->
+            <section id="dashboard" class="tab-content active fade-in" aria-labelledby="tabDashboard">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Total Siswa</h3>
+                            <div class="stat-value" id="totalStudents">16</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <p class="stat-desc">Semester 1 2025</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Rata-rata Hafalan</h3>
+                            <div class="stat-value" id="avgHafalan">23.5/37</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="avgProgressBar" style="width: 63.5%"></div>
+                            </div>
+                            <p class="stat-desc">63.5% selesai</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Kehadiran Rata-rata</h3>
+                            <div class="stat-value" id="avgAttendance">85.6%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85.6%"></div>
+                            </div>
+                            <p class="stat-desc">Dari 50 pertemuan</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Siswa Terbaik</h3>
+                            <div class="stat-value" id="topStudent">M. Riza</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <p class="stat-desc">37/37 surah</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absensi-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-line"></i> Ringkasan Semester
+                    </h2>
+                    
+                    <div class="semester-info">
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Periode</div>
+                                <div>Juli - Desember 2025</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Total Pertemuan</div>
+                                <div>50 sesi (8x/bulan)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-book-open"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Target Hafalan</div>
+                                <div>37 Surah Juz 30</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Siswa Khatam</div>
+                                <div>2 siswa (12.5%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="students-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-crown"></i> Top 3 Performers
+                    </h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                        <div style="background: linear-gradient(135deg, #fff9e6, #fff2cc); padding: 25px; border-radius: 15px;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <div style="background: #ffd700; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;" aria-label="Peringkat 1">1</div>
+                                <div>
+                                    <h4 style="margin: 0; color: var(--secondary);">Muhammad Riza Ibrahim</h4>
+                                    <p style="margin: 5px 0 0; color: #666; font-size: 0.9rem;">37/37 surah • 100%</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; background: white; padding: 15px; border-radius: 10px;">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666;">Kehadiran</div>
+                                    <div style="font-weight: bold; color: var(--primary);">40/50</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666;">Poin</div>
+                                    <div style="font-weight: bold; color: var(--secondary);">950</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); padding: 25px; border-radius: 15px;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <div style="background: #c0c0c0; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;" aria-label="Peringkat 2">2</div>
+                                <div>
+                                    <h4 style="margin: 0; color: var(--secondary);">Muhammad Abrisam Firdaus</h4>
+                                    <p style="margin: 5px 0 0; color: #666; font-size: 0.9rem;">40/37 surah • 108%</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; background: white; padding: 15px; border-radius: 10px;">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666;">Kehadiran</div>
+                                    <div style="font-weight: bold; color: var(--primary);">48/50</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666;">Poin</div>
+                                    <div style="font-weight: bold; color: var(--secondary);">920</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #f2e6d9, #e9d4bc); padding: 25px; border-radius: 15px;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <div style="background: #cd7f32; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;" aria-label="Peringkat 3">3</div>
+                                <div>
+                                    <h4 style="margin: 0; color: var(--secondary);">Daris</h4>
+                                    <p style="margin: 5px 0 0; color: #666; font-size: 0.9rem;">40/37 surah • 108%</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; background: white; padding: 15px; border-radius: 10px;">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666;">Kehadiran</div>
+                                    <div style="font-weight: bold; color: var(--primary);">21/50</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.85rem; color: #666;">Poin</div>
+                                    <div style="font-weight: bold; color: var(--secondary);">880</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABSENSI TAB -->
+            <section id="absensi" class="tab-content" aria-labelledby="tabAbsensi">
+                <div class="absensi-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Absensi Semester 1 - 2025
+                    </h2>
+                    
+                    <div class="semester-info">
+                        <div class="info-item">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Keterangan</div>
+                                <div>H = Hadir, I = Ijin, S = Sakit, A = Alpha</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-check"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Total Hadir</div>
+                                <div id="totalHadir">0</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-times"></i>
+                            <div>
+                                <div style="font-weight: 600; color: var(--secondary);">Total Alpha</div>
+                                <div id="totalAlpha">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="month-grid" id="absensiGrid">
+                        <!-- Data absensi akan diisi oleh JavaScript -->
+                    </div>
+
+                    <div style="margin-top: 40px;">
+                        <h3 style="color: var(--secondary); margin-bottom: 20px;">
+                            <i class="fas fa-chart-pie"></i> Statistik Kehadiran
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                            <div style="background: #f8f9ff; padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">Rata-rata Kehadiran</div>
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">85.6%</div>
+                            </div>
+                            <div style="background: #f8f9ff; padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">Pertemuan Tersisa</div>
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--warning);">0</div>
+                            </div>
+                            <div style="background: #f8f9ff; padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">Siswa dengan 100%</div>
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--success);">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DATA SISWA TAB -->
+            <section id="siswa" class="tab-content" aria-labelledby="tabSiswa">
+                <div class="students-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-users"></i> Data Siswa Kelas B IKHWAN At-Thuba
+                    </h2>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Catatan:</strong> Siswa dengan status pindahan hanya dihitung pertemuan yang diikuti
+                        </div>
+                    </div>
+
+                    <div class="students-grid" id="studentsGrid">
+                        <!-- Data siswa akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- KLASEMEN TAB -->
+            <section id="ranking" class="tab-content" aria-labelledby="tabRanking">
+                <div class="ranking-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-trophy"></i> Klasemen Hafalan Semester 1
+                    </h2>
+                    
+                    <div class="podium">
+                        <div class="podium-place second" id="secondPlace" role="region" aria-label="Juara 2">
+                            <!-- Diisi oleh JavaScript -->
+                        </div>
+                        
+                        <div class="podium-place first" id="firstPlace" role="region" aria-label="Juara 1">
+                            <!-- Diisi oleh JavaScript -->
+                        </div>
+                        
+                        <div class="podium-place third" id="thirdPlace" role="region" aria-label="Juara 3">
+                            <!-- Diisi oleh JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="ranking-table-container">
+                        <table class="ranking-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Rank</th>
+                                    <th scope="col">Nama Siswa</th>
+                                    <th scope="col">Jumlah Surah</th>
+                                    <th scope="col">Progress</th>
+                                    <th scope="col">Kehadiran</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Poin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rankingTableBody">
+                                <!-- Diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LAPORAN TAB -->
+            <section id="laporan" class="tab-content" aria-labelledby="tabLaporan">
+                <div class="reports-container">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-bar"></i> Laporan & Analytics
+                    </h2>
+                    
+                    <div class="reports-grid">
+                        <div class="report-card" role="button" tabindex="0" onclick="downloadSummaryPDF()" onkeypress="if(event.key === 'Enter') downloadSummaryPDF()">
+                            <div class="report-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="report-content">
+                                <h4>Laporan Ringkasan</h4>
+                                <p>Laporan lengkap semester 1: progress hafalan, kehadiran, dan pencapaian</p>
+                                <button class="btn btn-primary" onclick="downloadSummaryPDF()">
+                                    <i class="fas fa-download"></i> Download PDF
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="report-card" role="button" tabindex="0" onclick="printStudentReports()" onkeypress="if(event.key === 'Enter') printStudentReports()">
+                            <div class="report-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="report-content">
+                                <h4>Laporan Per Siswa</h4>
+                                <p>Detail progress setiap siswa dengan grafik perkembangan</p>
+                                <button class="btn btn-primary" onclick="printStudentReports()">
+                                    <i class="fas fa-print"></i> Cetak
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="report-card" role="button" tabindex="0" onclick="backupToGoogleSheets()" onkeypress="if(event.key === 'Enter') backupToGoogleSheets()">
+                            <div class="report-icon">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <div class="report-content">
+                                <h4>Backup ke Google Sheets</h4>
+                                <p>Simpan semua data ke Google Sheets untuk backup dan analisis</p>
+                                <button class="btn btn-success" onclick="backupToGoogleSheets()">
+                                    <i class="fas fa-sync-alt"></i> Backup Sekarang
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="report-card" role="button" tabindex="0" onclick="sendToParents()" onkeypress="if(event.key === 'Enter') sendToParents()">
+                            <div class="report-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="report-content">
+                                <h4>Kirim ke Orang Tua</h4>
+                                <p>Kirim laporan progress ke WhatsApp orang tua</p>
+                                <button class="btn btn-danger" onclick="sendToParents()">
+                                    <i class="fab fa-whatsapp"></i> Kirim Laporan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px;">
+                        <h3 style="color: var(--secondary); margin-bottom: 20px;">
+                            <i class="fas fa-chart-line"></i> Analytics Dashboard
+                        </h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                            <div style="background: #f8f9ff; padding: 25px; border-radius: 15px;">
+                                <h4 style="color: var(--secondary); margin-bottom: 15px;">Distribusi Hafalan</h4>
+                                <canvas id="hafalanChart" style="height: 200px;" role="img" aria-label="Grafik distribusi hafalan siswa"></canvas>
+                            </div>
+                            
+                            <div style="background: #f8f9ff; padding: 25px; border-radius: 15px;">
+                                <h4 style="color: var(--secondary); margin-bottom: 15px;">Statistik Kehadiran</h4>
+                                <canvas id="attendanceChart" style="height: 200px;" role="img" aria-label="Grafik statistik kehadiran siswa"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer" role="contentinfo">
+            <p>🏆 Dashboard Tahfiz Kelas B IKHWAN At-Thuba - Semester 1 2025</p>
+            <p>Dibuat untuk pendidikan Al-Quran - <a href="mailto:admin@tahfiz-atthuba.com" style="color: var(--primary);">Kontak Admin</a></p>
+            <div class="footer-links">
+                <a href="#" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> Export PDF</a>
+                <a href="#" onclick="printDashboard()"><i class="fas fa-print"></i> Print</a>
+                <a href="#" onclick="showHelp()"><i class="fas fa-question-circle"></i> Bantuan</a>
+                <a href="privacy-policy.html"><i class="fas fa-shield-alt"></i> Privasi</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9rem; color: #999;">
+                Versi 2.1 • Terakhir update: <span id="lastUpdate"></span>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ================ KONSTANTA & DATA ================
+        const MONTHS = ['Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const TOTAL_SESSIONS = 50;
+        const TOTAL_SURAH = 37;
+
+        // Data dummy untuk demo (aman untuk online)
+        const studentsData = [
+            {
+                id: 1,
+                name: "Epal Nurfalah Faisal Ghoful",
+                surahCount: 25,
+                totalSurah: 37,
+                attendance: { hadir: 48, ijin: 2, sakit: 0, alpha: 0 },
+                status: "aktif"
+            },
+            {
+                id: 2,
+                name: "Hifzi Dinan ArRafif",
+                surahCount: 25,
+                totalSurah: 37,
+                attendance: { hadir: 46, ijin: 0, sakit: 0, alpha: 4 },
+                status: "aktif"
+            },
+            {
+                id: 3,
+                name: "Muhammad Abrisam Firdaus",
+                surahCount: 40,
+                totalSurah: 37,
+                attendance: { hadir: 48, ijin: 0, sakit: 0, alpha: 2 },
+                status: "aktif"
+            },
+            {
+                id: 4,
+                name: "Muhammad Alfan",
+                surahCount: 22,
+                totalSurah: 37,
+                attendance: { hadir: 32, ijin: 0, sakit: 0, alpha: 18 },
+                status: "aktif"
+            },
+            {
+                id: 5,
+                name: "Muhammad Fikar Kamil Irsyadi",
+                surahCount: 16,
+                totalSurah: 37,
+                attendance: { hadir: 48, ijin: 0, sakit: 0, alpha: 2 },
+                status: "aktif"
+            },
+            {
+                id: 6,
+                name: "Muhammad Jibran Ladzuwardi Ramadhan",
+                surahCount: 18,
+                totalSurah: 37,
+                attendance: { hadir: 43, ijin: 0, sakit: 5, alpha: 2 },
+                status: "aktif"
+            },
+            {
+                id: 7,
+                name: "Muhammad Riza Ibrahim",
+                surahCount: 37,
+                totalSurah: 37,
+                attendance: { hadir: 40, ijin: 0, sakit: 5, alpha: 5 },
+                status: "aktif"
+            },
+            {
+                id: 8,
+                name: "Nabhan Uwais Al-Hufadzi",
+                surahCount: 26,
+                totalSurah: 37,
+                attendance: { hadir: 44, ijin: 3, sakit: 0, alpha: 3 },
+                status: "aktif"
+            },
+            {
+                id: 9,
+                name: "Daris",
+                surahCount: 40,
+                totalSurah: 37,
+                attendance: { hadir: 21, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 10,
+                name: "Nazmi",
+                surahCount: 33,
+                totalSurah: 37,
+                attendance: { hadir: 18, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 11,
+                name: "Irham",
+                surahCount: 22,
+                totalSurah: 37,
+                attendance: { hadir: 14, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 12,
+                name: "Fadil",
+                surahCount: 24,
+                totalSurah: 37,
+                attendance: { hadir: 15, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 13,
+                name: "Akbar",
+                surahCount: 25,
+                totalSurah: 37,
+                attendance: { hadir: 10, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 14,
+                name: "Dani",
+                surahCount: 25,
+                totalSurah: 37,
+                attendance: { hadir: 10, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 15,
+                name: "Ari",
+                surahCount: 0,
+                totalSurah: 37,
+                attendance: { hadir: 21, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            },
+            {
+                id: 16,
+                name: "Rizan",
+                surahCount: 0,
+                totalSurah: 37,
+                attendance: { hadir: 21, ijin: 0, sakit: 0, alpha: 0 },
+                status: "pindahan",
+                note: "Sisa tidak dihitung karena pindahan"
+            }
+        ];
+
+        // Data login yang aman untuk online
+        const users = {
+            // Guru
+            guru: { 
+                username: "guru", 
+                password: "guru123", 
+                role: "guru",
+                name: "Guru Tahfiz"
+            },
+            // Orang tua - username dari nama anak (lowercase, tanpa spasi)
+            epalnurfalahfaisalghoful: { 
+                username: "epalnurfalahfaisalghoful", 
+                password: "anak123", 
+                role: "ortu",
+                studentId: 1
+            },
+            muhammadabrisamfirdaus: { 
+                username: "muhammadabrisamfirdaus", 
+                password: "anak123", 
+                role: "ortu",
+                studentId: 3
+            },
+            muhammadrizaibrahim: { 
+                username: "muhammadrizaibrahim", 
+                password: "anak123", 
+                role: "ortu",
+                studentId: 7
+            }
+        };
+
+        // ================ STATE MANAGEMENT ================
+        let currentUser = null;
+        let currentTab = 'dashboard';
+        let attendanceRecords = {};
+
+        // ================ UTILITY FUNCTIONS ================
+        function showNotification(message, type = 'success') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingModal').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingModal').style.display = 'none';
+        }
+
+        // ================ PWA FUNCTIONS ================
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            }
+        }
+
+        function initPWA() {
+            // Add to homescreen prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install button
+                const installBtn = document.createElement('button');
+                installBtn.className = 'btn btn-success';
+                installBtn.innerHTML = '<i class="fas fa-download"></i> Install App';
+                installBtn.style.position = 'fixed';
+                installBtn.style.bottom = '20px';
+                installBtn.style.right = '20px';
+                installBtn.style.zIndex = '9999';
+                installBtn.onclick = () => {
+                    installBtn.style.display = 'none';
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(() => {
+                        deferredPrompt = null;
+                    });
+                };
+                
+                document.body.appendChild(installBtn);
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    if (installBtn.parentNode) {
+                        installBtn.style.opacity = '0';
+                        setTimeout(() => installBtn.remove(), 500);
+                    }
+                }, 10000);
+            });
+        }
+
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            initData();
+            showLoginModal();
+            updateLastUpdate();
+            setupCharts();
+            initPWA();
+            
+            // Service Worker untuk PWA
+            registerServiceWorker();
+            
+            // Setup login form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+            
+            // Setup tab click handlers
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    if (this.id) {
+                        switchTab(this.id.replace('tab', '').toLowerCase());
+                    }
+                });
+                
+                // Keyboard navigation
+                tab.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            // Focus trap for modal
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('loginModal');
+                if (modal.style.display === 'flex' && e.key === 'Escape') {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Save state to localStorage
+            window.addEventListener('beforeunload', function() {
+                if (currentUser) {
+                    localStorage.setItem('tahfiz_last_user', currentUser.username);
+                }
+            });
+            
+            // Check for saved user
+            const lastUser = localStorage.getItem('tahfiz_last_user');
+            if (lastUser && users[lastUser]) {
+                currentUser = users[lastUser];
+                updateUIForUser();
+                showNotification(`Selamat datang kembali, ${currentUser.name || currentUser.username}!`, 'success');
+            }
+        });
+
+        function initData() {
+            generateAttendanceRecords();
+            updateLastUpdate();
+            calculateTotals();
+        }
+
+        function generateAttendanceRecords() {
+            MONTHS.forEach(month => {
+                attendanceRecords[month] = {};
+                studentsData.forEach(student => {
+                    attendanceRecords[month][student.id] = generateStudentAttendance(student, month);
+                });
+            });
+        }
+
+        function generateStudentAttendance(student, month) {
+            let sessions = [];
+            const totalSessions = 8;
+            
+            const totalHadir = student.attendance.hadir || 0;
+            const totalIjin = student.attendance.ijin || 0;
+            const totalSakit = student.attendance.sakit || 0;
+            const totalAlpha = student.attendance.alpha || 0;
+            
+            let remainingHadir = totalHadir;
+            let remainingIjin = totalIjin;
+            let remainingSakit = totalSakit;
+            let remainingAlpha = totalAlpha;
+            
+            for (let i = 0; i < totalSessions; i++) {
+                if (remainingHadir > 0 && Math.random() > 0.3) {
+                    sessions.push('H');
+                    remainingHadir--;
+                } else if (remainingIjin > 0 && Math.random() > 0.5) {
+                    sessions.push('I');
+                    remainingIjin--;
+                } else if (remainingSakit > 0 && Math.random() > 0.5) {
+                    sessions.push('S');
+                    remainingSakit--;
+                } else if (remainingAlpha > 0) {
+                    sessions.push('A');
+                    remainingAlpha--;
+                } else {
+                    sessions.push('H');
+                }
+            }
+            
+            return sessions;
+        }
+
+        function updateLastUpdate() {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function calculateTotals() {
+            let totalHadir = 0;
+            let totalAlpha = 0;
+            
+            studentsData.forEach(student => {
+                totalHadir += student.attendance.hadir || 0;
+                totalAlpha += student.attendance.alpha || 0;
+            });
+            
+            document.getElementById('totalHadir').textContent = totalHadir;
+            document.getElementById('totalAlpha').textContent = totalAlpha;
+            
+            const totalSurah = studentsData.reduce((sum, student) => sum + student.surahCount, 0);
+            const avgSurah = (totalSurah / studentsData.length).toFixed(1);
+            const avgProgress = ((totalSurah / (studentsData.length * TOTAL_SURAH)) * 100).toFixed(1);
+            
+            document.getElementById('avgHafalan').textContent = `${avgSurah}/${TOTAL_SURAH}`;
+            document.getElementById('avgProgressBar').style.width = `${avgProgress}%`;
+            
+            const totalAttendance = studentsData.reduce((sum, student) => {
+                const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                return sum + (attended / TOTAL_SESSIONS) * 100;
+            }, 0);
+            
+            const avgAttendance = (totalAttendance / studentsData.length).toFixed(1);
+            document.getElementById('avgAttendance').textContent = `${avgAttendance}%`;
+            
+            const sorted = [...studentsData].sort((a, b) => b.surahCount - a.surahCount);
+            if (sorted[0]) {
+                document.getElementById('topStudent').textContent = sorted[0].name.split(' ')[0];
+            }
+        }
+
+        function calculatePoints(student) {
+            let points = 0;
+            points += student.surahCount * 10;
+            
+            if (student.surahCount >= student.totalSurah) {
+                points += 100;
+            }
+            
+            const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+            const attendancePercent = attended / TOTAL_SESSIONS;
+            
+            if (attendancePercent >= 0.9) points += 100;
+            else if (attendancePercent >= 0.8) points += 80;
+            else if (attendancePercent >= 0.7) points += 60;
+            
+            if (student.status === 'aktif') points += 50;
+            
+            return points;
+        }
+
+        // ================ LOGIN SYSTEM ================
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+            document.getElementById('username').focus();
+        }
+
+        function openLoginModal() {
+            showLoginModal();
+        }
+
+        function handleLogin() {
+            const role = document.getElementById('userRole').value;
+            const username = document.getElementById('username').value.toLowerCase().replace(/\s+/g, '');
+            const password = document.getElementById('password').value;
+            
+            if (!users[username]) {
+                showNotification('Username tidak ditemukan!', 'error');
+                return;
+            }
+            
+            const user = users[username];
+            
+            if (user.password !== password) {
+                showNotification('Password salah!', 'error');
+                return;
+            }
+            
+            if (user.role !== role) {
+                showNotification('Peran tidak sesuai!', 'error');
+                return;
+            }
+            
+            currentUser = user;
+            
+            // Save to localStorage
+            localStorage.setItem('tahfiz_last_user', user.username);
+            
+            updateUIForUser();
+            document.getElementById('loginModal').style.display = 'none';
+            showNotification(`Selamat datang, ${role === 'guru' ? 'Guru' : 'Orang Tua'}!`, 'success');
+        }
+
+        function updateUIForUser() {
+            const userDisplay = document.getElementById('userDisplay');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (currentUser.role === 'guru') {
+                userDisplay.innerHTML = `
+                    <i class="fas fa-user-tie"></i>
+                    <span>${currentUser.name}</span>
+                `;
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.disabled = false;
+                    tab.style.opacity = '1';
+                    tab.style.cursor = 'pointer';
+                });
+            } else {
+                const student = studentsData.find(s => s.id === currentUser.studentId);
+                userDisplay.innerHTML = `
+                    <i class="fas fa-user"></i>
+                    <span>Orang Tua ${student ? student.name.split(' ')[0] : ''}</span>
+                `;
+                
+                document.querySelectorAll('.nav-tab').forEach((tab) => {
+                    if (tab.id !== 'tabDashboard') {
+                        tab.disabled = true;
+                        tab.style.opacity = '0.5';
+                        tab.style.cursor = 'not-allowed';
+                    }
+                });
+                
+                loadParentView(currentUser.studentId);
+            }
+            
+            logoutBtn.style.display = 'inline-block';
+        }
+
+        function loadParentView(studentId) {
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('totalStudents').textContent = "1";
+            document.getElementById('avgHafalan').textContent = `${student.surahCount}/${student.totalSurah}`;
+            
+            const progressPercent = (student.surahCount / student.totalSurah) * 100;
+            document.getElementById('avgProgressBar').style.width = `${progressPercent}%`;
+            
+            const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+            const attendancePercent = ((attended / TOTAL_SESSIONS) * 100).toFixed(1);
+            document.getElementById('avgAttendance').textContent = `${attendancePercent}%`;
+            
+            const sorted = [...studentsData].sort((a, b) => b.surahCount - a.surahCount);
+            const rank = sorted.findIndex(s => s.id === studentId) + 1;
+            document.getElementById('topStudent').textContent = `Peringkat #${rank}`;
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('tahfiz_last_user');
+            
+            document.getElementById('userDisplay').innerHTML = `
+                <i class="fas fa-user"></i>
+                <span>Silakan login</span>
+            `;
+            
+            document.getElementById('logoutBtn').style.display = 'none';
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.disabled = false;
+                tab.style.opacity = '1';
+                tab.style.cursor = 'pointer';
+            });
+            
+            calculateTotals();
+            showLoginModal();
+            
+            showNotification('Anda telah logout', 'success');
+        }
+
+        // ================ TAB SYSTEM ================
+        function switchTab(tabName) {
+            if (currentUser && currentUser.role === 'ortu' && tabName !== 'dashboard') {
+                showNotification('Hanya guru yang dapat mengakses fitur ini', 'warning');
+                return;
+            }
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-current', 'false');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            
+            const activeTab = document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.setAttribute('aria-current', 'page');
+            }
+            
+            currentTab = tabName;
+            
+            switch(tabName) {
+                case 'absensi':
+                    loadAbsensiTab();
+                    break;
+                case 'siswa':
+                    loadSiswaTab();
+                    break;
+                case 'ranking':
+                    loadRankingTab();
+                    break;
+                case 'laporan':
+                    loadLaporanTab();
+                    break;
+            }
+            
+            // Focus pada konten baru untuk accessibility
+            document.getElementById(tabName).focus();
+        }
+
+        // ================ TAB CONTENT LOADERS ================
+        function loadAbsensiTab() {
+            const grid = document.getElementById('absensiGrid');
+            let html = '';
+            
+            MONTHS.forEach(month => {
+                html += `
+                    <div class="month-card">
+                        <div class="month-header">
+                            <div class="month-title">${month} 2025</div>
+                            <div class="month-stats">
+                                <span class="stat-badge">8 Pertemuan</span>
+                            </div>
+                        </div>
+                        <table class="absensi-table">
+                            <caption style="caption-side: bottom; text-align: left; padding: 10px 0; color: #666; font-size: 0.9rem;">
+                                Data absensi bulan ${month} 2025
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nama</th>
+                                    ${Array.from({length: 8}, (_, i) => `<th scope="col">P${i+1}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${studentsData.slice(0, 5).map(student => `
+                                    <tr>
+                                        <th scope="row" style="text-align: left; font-size: 0.9em;">${student.name.split(' ')[0]}</th>
+                                        ${attendanceRecords[month][student.id].map(session => `
+                                            <td>
+                                                <span class="status-cell status-${getStatusClass(session)}" aria-label="${getStatusLabel(session)}">${session}</span>
+                                            </td>
+                                        `).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${studentsData.length > 5 ? `
+                            <div style="text-align: center; margin-top: 15px; color: #666; font-size: 0.9rem;">
+                                <i class="fas fa-ellipsis-h"></i> ${studentsData.length - 5} siswa lainnya
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'H': 'hadir',
+                'I': 'ijin',
+                'S': 'sakit',
+                'A': 'alpha'
+            };
+            return classes[status] || 'alpha';
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'H': 'Hadir',
+                'I': 'Ijin',
+                'S': 'Sakit',
+                'A': 'Alpha'
+            };
+            return labels[status] || 'Alpha';
+        }
+
+        function loadSiswaTab() {
+            const grid = document.getElementById('studentsGrid');
+            
+            grid.innerHTML = studentsData.map(student => {
+                const progressPercent = ((student.surahCount / student.totalSurah) * 100).toFixed(1);
+                const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                const attendancePercent = student.status === 'pindahan' ? 
+                    `${attended} pertemuan` : 
+                    `${((attended / TOTAL_SESSIONS) * 100).toFixed(1)}%`;
+                
+                return `
+                    <div class="student-card">
+                        <div class="student-header">
+                            <div class="student-name">
+                                <h4>${student.name}</h4>
+                                <div class="student-number">
+                                    <i class="fas fa-hashtag"></i> ${student.id}
+                                    <span style="background: ${student.status === 'aktif' ? '#4cc9f0' : '#f72585'}; 
+                                          color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-left: 10px;">
+                                        ${student.status === 'aktif' ? 'Aktif' : 'Pindahan'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="student-stats">
+                            <div class="stat-box">
+                                <div class="stat-label">Hafalan</div>
+                                <div class="stat-number">${student.surahCount}/${student.totalSurah}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Kehadiran</div>
+                                <div class="stat-number">${attendancePercent}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="student-progress">
+                            <div class="progress-info">
+                                <span>Progress Hafalan</span>
+                                <span>${progressPercent}%</span>
+                            </div>
+                            <div class="progress-bar" role="progressbar" aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                        </div>
+                        
+                        ${student.note ? `
+                            <div style="margin-top: 15px; padding: 10px; background: rgba(247, 37, 133, 0.1); border-radius: 8px; font-size: 0.85rem; color: #f72585;">
+                                <i class="fas fa-info-circle"></i> ${student.note}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadRankingTab() {
+            const sortedStudents = [...studentsData].sort((a, b) => b.surahCount - a.surahCount);
+            
+            const firstPlace = sortedStudents[0];
+            const secondPlace = sortedStudents[1];
+            const thirdPlace = sortedStudents[2];
+            
+            document.getElementById('firstPlace').innerHTML = `
+                <div class="podium-number">1</div>
+                <div class="podium-student">
+                    <div class="student-rank">${firstPlace.name.split(' ')[0]}</div>
+                    <div class="student-surah">${firstPlace.surahCount} surah</div>
+                </div>
+            `;
+            
+            document.getElementById('secondPlace').innerHTML = `
+                <div class="podium-number">2</div>
+                <div class="podium-student">
+                    <div class="student-rank">${secondPlace.name.split(' ')[0]}</div>
+                    <div class="student-surah">${secondPlace.surahCount} surah</div>
+                </div>
+            `;
+            
+            document.getElementById('thirdPlace').innerHTML = `
+                <div class="podium-number">3</div>
+                <div class="podium-student">
+                    <div class="student-rank">${thirdPlace.name.split(' ')[0]}</div>
+                    <div class="student-surah">${thirdPlace.surahCount} surah</div>
+                </div>
+            `;
+            
+            const tbody = document.getElementById('rankingTableBody');
+            tbody.innerHTML = sortedStudents.map((student, index) => {
+                const progressPercent = ((student.surahCount / student.totalSurah) * 100).toFixed(1);
+                const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                const attendancePercent = student.status === 'pindahan' ? 
+                    `${attended}` : 
+                    `${((attended / TOTAL_SESSIONS) * 100).toFixed(1)}%`;
+                
+                const points = calculatePoints(student);
+                
+                return `
+                    <tr>
+                        <td class="rank-cell rank-${index + 1}">${index + 1}</td>
+                        <td>
+                            <strong>${student.name}</strong>
+                            ${index < 3 ? `<span class="badge badge-${index === 0 ? 'gold' : index === 1 ? 'silver' : 'bronze'}">Top ${index + 1}</span>` : ''}
+                        </td>
+                        <td>${student.surahCount}/${student.totalSurah}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="flex: 1; height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: ${progressPercent}%; background: ${index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : index === 2 ? '#cd7f32' : '#4361ee'};"></div>
+                                </div>
+                                <span>${progressPercent}%</span>
+                            </div>
+                        </td>
+                        <td>${attendancePercent}</td>
+                        <td>
+                            <span style="background: ${student.status === 'aktif' ? '#4cc9f0' : '#f72585'}; 
+                                  color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem;">
+                                ${student.status === 'aktif' ? 'Aktif' : 'Pindahan'}
+                            </span>
+                        </td>
+                        <td style="font-weight: bold; color: var(--secondary);">${points}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadLaporanTab() {
+            // Charts akan diupdate otomatis
+        }
+
+        // ================ CHART FUNCTIONS ================
+        let hafalanChart = null;
+        let attendanceChart = null;
+
+        function setupCharts() {
+            setTimeout(() => {
+                createHafalanChart();
+                createAttendanceChart();
+            }, 500);
+        }
+
+        function createHafalanChart() {
+            const ctx = document.getElementById('hafalanChart');
+            if (!ctx) return;
+            
+            if (hafalanChart) {
+                hafalanChart.destroy();
+            }
+            
+            const ranges = [
+                { label: '0-10', min: 0, max: 10 },
+                { label: '11-20', min: 11, max: 20 },
+                { label: '21-30', min: 21, max: 30 },
+                { label: '31-37', min: 31, max: 37 },
+                { label: '>37', min: 38, max: 100 }
+            ];
+            
+            const data = ranges.map(range => {
+                return studentsData.filter(s => s.surahCount >= range.min && s.surahCount <= range.max).length;
+            });
+            
+            hafalanChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ranges.map(r => r.label),
+                    datasets: [{
+                        label: 'Jumlah Siswa',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(239, 35, 60, 0.7)',
+                            'rgba(247, 37, 133, 0.7)',
+                            'rgba(67, 97, 238, 0.7)',
+                            'rgba(76, 201, 240, 0.7)',
+                            'rgba(58, 12, 163, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(239, 35, 60)',
+                            'rgb(247, 37, 133)',
+                            'rgb(67, 97, 238)',
+                            'rgb(76, 201, 240)',
+                            'rgb(58, 12, 163)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function createAttendanceChart() {
+            const ctx = document.getElementById('attendanceChart');
+            if (!ctx) return;
+            
+            if (attendanceChart) {
+                attendanceChart.destroy();
+            }
+            
+            const ranges = [
+                { label: '<70%', min: 0, max: 69 },
+                { label: '70-79%', min: 70, max: 79 },
+                { label: '80-89%', min: 80, max: 89 },
+                { label: '90-100%', min: 90, max: 100 }
+            ];
+            
+            const data = ranges.map(range => {
+                return studentsData.filter(student => {
+                    if (student.status === 'pindahan') return false;
+                    const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                    const percent = (attended / TOTAL_SESSIONS) * 100;
+                    return percent >= range.min && percent <= range.max;
+                }).length;
+            });
+            
+            attendanceChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ranges.map(r => r.label),
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            'rgba(239, 35, 60, 0.7)',
+                            'rgba(247, 37, 133, 0.7)',
+                            'rgba(67, 97, 238, 0.7)',
+                            'rgba(76, 201, 240, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(239, 35, 60)',
+                            'rgb(247, 37, 133)',
+                            'rgb(67, 97, 238)',
+                            'rgb(76, 201, 240)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ================ REPORT FUNCTIONS ================
+        function downloadSummaryPDF() {
+            if (!currentUser || currentUser.role !== 'guru') {
+                showNotification('Hanya guru yang dapat mengunduh laporan', 'warning');
+                return;
+            }
+            
+            showLoading();
+            
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Header
+                    doc.setFontSize(20);
+                    doc.setTextColor(67, 97, 238);
+                    doc.text('Laporan Ringkasan Tahfiz', 105, 20, { align: 'center' });
+                    
+                    doc.setFontSize(12);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text('Kelas B IKHWAN At-Thuba - Semester 1 2025', 105, 30, { align: 'center' });
+                    
+                    let y = 50;
+                    doc.setFontSize(14);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('Ringkasan Statistik:', 20, y);
+                    
+                    y += 10;
+                    doc.setFontSize(11);
+                    doc.text(`Total Siswa: ${studentsData.length}`, 30, y);
+                    y += 7;
+                    
+                    const totalSurah = studentsData.reduce((sum, student) => sum + student.surahCount, 0);
+                    const avgSurah = (totalSurah / studentsData.length).toFixed(1);
+                    doc.text(`Rata-rata Hafalan: ${avgSurah}/${TOTAL_SURAH} surah`, 30, y);
+                    y += 7;
+                    
+                    const totalAttendance = studentsData.reduce((sum, student) => {
+                        const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                        return sum + (attended / TOTAL_SESSIONS) * 100;
+                    }, 0);
+                    const avgAttendance = (totalAttendance / studentsData.length).toFixed(1);
+                    doc.text(`Rata-rata Kehadiran: ${avgAttendance}%`, 30, y);
+                    y += 15;
+                    
+                    const sorted = [...studentsData].sort((a, b) => b.surahCount - a.surahCount);
+                    doc.setFontSize(14);
+                    doc.text('Top 3 Performers:', 20, y);
+                    
+                    y += 10;
+                    doc.setFontSize(11);
+                    for (let i = 0; i < Math.min(3, sorted.length); i++) {
+                        doc.text(`${i+1}. ${sorted[i].name} - ${sorted[i].surahCount} surah`, 30, y);
+                        y += 7;
+                    }
+                    
+                    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                    const filename = `Laporan_Tahfiz_${timestamp}.pdf`;
+                    
+                    doc.save(filename);
+                    
+                    showNotification('Laporan berhasil diunduh!', 'success');
+                } catch (error) {
+                    showNotification('Gagal mengunduh PDF. Coba lagi nanti.', 'error');
+                    console.error('PDF Error:', error);
+                } finally {
+                    hideLoading();
+                }
+            }, 1500);
+        }
+
+        function printStudentReports() {
+            if (!currentUser || currentUser.role !== 'guru') {
+                showNotification('Hanya guru yang dapat mencetak laporan', 'warning');
+                return;
+            }
+            
+            showLoading();
+            
+            const printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Siswa - Tahfiz Kelas B IKHWAN At-Thuba</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; }
+                        h1 { color: #4361ee; text-align: center; }
+                        h2 { color: #3a0ca3; margin-top: 30px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        th { background-color: #4361ee; color: white; }
+                        .header { text-align: center; margin-bottom: 40px; }
+                        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #666; }
+                        @media print {
+                            body { margin: 0; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Laporan Per Siswa</h1>
+                        <h3>Kelas B IKHWAN At-Thuba - Semester 1 2025</h3>
+                        <p>Dicetak pada: ${new Date().toLocaleDateString('id-ID')}</p>
+                        <button class="no-print" onclick="window.print()" style="padding: 10px 20px; background: #4361ee; color: white; border: none; border-radius: 5px; cursor: pointer;">Cetak Halaman</button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Hafalan (surah)</th>
+                                <th>Progress</th>
+                                <th>Kehadiran</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${studentsData.map((student, index) => {
+                                const progressPercent = ((student.surahCount / student.totalSurah) * 100).toFixed(1);
+                                const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                                const attendancePercent = student.status === 'pindahan' ? 
+                                    `${attended} pertemuan` : 
+                                    `${((attended / TOTAL_SESSIONS) * 100).toFixed(1)}%`;
+                                
+                                return `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>${student.name}</td>
+                                        <td>${student.surahCount}/${student.totalSurah}</td>
+                                        <td>${progressPercent}%</td>
+                                        <td>${attendancePercent}</td>
+                                        <td>${student.status === 'aktif' ? 'Aktif' : 'Pindahan'}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div class="footer">
+                        <p>Dashboard Tahfiz Kelas B IKHWAN At-Thuba - Dibuat untuk pendidikan Al-Quran</p>
+                        <p>Laporan ini dibuat secara otomatis oleh sistem</p>
+                    </div>
+                    
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                            setTimeout(() => {
+                                window.close();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            
+            setTimeout(() => {
+                hideLoading();
+                showNotification('Laporan siap dicetak!', 'success');
+            }, 500);
+        }
+
+        function backupToGoogleSheets() {
+            if (!currentUser || currentUser.role !== 'guru') {
+                showNotification('Hanya guru yang dapat melakukan backup', 'warning');
+                return;
+            }
+            
+            showLoading();
+            
+            setTimeout(() => {
+                let csvContent = "data:text/csv;charset=utf-8,Nama,Hafalan,Progress%,Kehadiran,Status\n";
+                
+                studentsData.forEach(student => {
+                    const progressPercent = ((student.surahCount / student.totalSurah) * 100).toFixed(1);
+                    const attended = (student.attendance.hadir || 0) + (student.attendance.ijin || 0) + (student.attendance.sakit || 0);
+                    const attendancePercent = student.status === 'pindahan' ? 
+                        `${attended}` : 
+                        `${((attended / TOTAL_SESSIONS) * 100).toFixed(1)}%`;
+                    
+                    csvContent += `"${student.name}",${student.surahCount},${progressPercent},${attendancePercent},${student.status}\n`;
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                link.setAttribute('download', `backup_tahfiz_${new Date().toISOString().slice(0, 10)}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                hideLoading();
+                showNotification('Backup berhasil! Data telah diunduh sebagai CSV', 'success');
+            }, 2000);
+        }
+
+        function sendToParents() {
+            if (!currentUser || currentUser.role !== 'guru') {
+                showNotification('Hanya guru yang dapat mengirim laporan', 'warning');
+                return;
+            }
+            
+            showLoading();
+            
+            setTimeout(() => {
+                const message = `Assalamu'alaikum Warahmatullahi Wabarakatuh
+
+Bapak/Ibu Orang Tua/Wali yang dirahmati Allah,
+
+Berikut progress hafalan siswa Tahfiz At-Thuba Semester 1 2025:
+
+${studentsData.map(student => {
+    const progressPercent = ((student.surahCount / TOTAL_SURAH) * 100).toFixed(1);
+    return `• ${student.name}: ${student.surahCount}/${TOTAL_SURAH} surah (${progressPercent}%)`;
+}).join('\n')}
+
+*Statistik Keseluruhan:*
+- Rata-rata hafalan: ${(studentsData.reduce((sum, s) => sum + s.surahCount, 0) / studentsData.length).toFixed(1)}/${TOTAL_SURAH} surah
+- Siswa terbaik: ${studentsData.sort((a,b) => b.surahCount - a.surahCount)[0].name}
+- Total siswa khatam: ${studentsData.filter(s => s.surahCount >= TOTAL_SURAH).length} orang
+
+Untuk informasi lebih detail, silakan login ke dashboard:
+https://tahfiz-atthuba.github.io
+
+Wassalamu'alaikum Warahmatullahi Wabarakatuh
+
+*Guru Tahfiz At-Thuba*`;
+                
+                const whatsappLink = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                
+                hideLoading();
+                
+                const confirmSend = confirm('Anda akan membuka WhatsApp untuk mengirim laporan. Lanjutkan?');
+                if (confirmSend) {
+                    window.open(whatsappLink, '_blank');
+                    showNotification('Pesan siap dikirim via WhatsApp!', 'success');
+                }
+            }, 1500);
+        }
+
+        // ================ OTHER FUNCTIONS ================
+        function downloadPDF() {
+            downloadSummaryPDF();
+        }
+
+        function printDashboard() {
+            window.print();
+        }
+
+        function showHelp() {
+            const helpContent = `
+Panduan Penggunaan Dashboard Tahfiz:
+
+📱 **FITUR UTAMA:**
+1. Dashboard: Ringkasan statistik dan top performers
+2. Absensi: Data kehadiran per bulan (50 pertemuan)
+3. Data Siswa: Detail progress setiap siswa
+4. Klasemen: Peringkat berdasarkan hafalan
+5. Laporan: Download, cetak, dan kirim laporan
+
+🔐 **LOGIN DEMO:**
+- Guru: username "guru", password "guru123"
+- Orang Tua: username nama siswa (tanpa spasi), password "anak123"
+  Contoh: "muhammadrizaibrahim"
+
+📊 **FITUR LAPORAN:**
+- Download PDF: Laporan ringkasan statistik
+- Cetak: Laporan detail per siswa (print-friendly)
+- Backup CSV: Export data untuk Google Sheets/Excel
+- Kirim WhatsApp: Template pesan untuk orang tua
+
+🖨️ **CETAK & EXPORT:**
+- Klik tombol Print untuk mencetak halaman aktif
+- Gunakan Download PDF untuk laporan formal
+- Backup CSV untuk analisis data lebih lanjut
+
+📱 **FITUR MOBILE:**
+- Responsif untuk semua ukuran layar
+- Dapat diinstall sebagai Progressive Web App (PWA)
+- Support offline untuk beberapa fitur
+
+🆘 **BANTUAN:**
+- Email: admin@tahfiz-atthuba.com
+- Refresh halaman jika ada masalah
+- Pastikan koneksi internet stabil
+
+📅 **CATATAN:**
+- Data siswa pindahan hanya dihitung pertemuan yang diikuti
+- Progress dihitung otomatis berdasarkan input data
+- Data terakhir update: ${document.getElementById('lastUpdate').textContent}
+            `;
+            
+            alert(helpContent);
+        }
+
+        // ================ SERVICE WORKER ================
+        if ('serviceWorker' in navigator) {
+            const swContent = `
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open('tahfiz-v2').then(cache => {
+            return cache.addAll([
+                './',
+                './index.html',
+                './manifest.json'
+            ]);
+        })
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request).then(response => {
+            return response || fetch(event.request);
+        })
+    );
+});
+            `;
+            
+            // Create a blob URL for the service worker
+            const blob = new Blob([swContent], { type: 'application/javascript' });
+            const swURL = URL.createObjectURL(blob);
+            
+            // Register service worker
+            navigator.serviceWorker.register(swURL)
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed:', error));
+        }
+
+        // ================ MANIFEST FOR PWA ================
+        const manifest = {
+            "name": "Dashboard Tahfiz At-Thuba",
+            "short_name": "Tahfiz Dashboard",
+            "description": "Monitoring progress hafalan Quran",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#4361ee",
+            "theme_color": "#3a0ca3",
+            "icons": [
+                {
+                    "src": "https://via.placeholder.com/192x192/4361ee/ffffff?text=T",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://via.placeholder.com/512x512/4361ee/ffffff?text=T",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }
+            ]
+        };
+
+        // Create and inject manifest
+        const manifestEl = document.createElement('link');
+        manifestEl.rel = 'manifest';
+        manifestEl.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+        document.head.appendChild(manifestEl);
+    </script>
+</body>
+</html>
